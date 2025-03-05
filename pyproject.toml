@@ -27,7 +27,7 @@ classifiers = [
 ]
 dependencies = [
     "aioice@git+https://github.com/borhandarabi/aioice#egg=main",
-    "av>=9.0.0,<14.0.0",
+    "av>=14.0.0,<15.0.0",
     "cffi>=1.0.0",
     "cryptography>=42.0.0",
     "google-crc32c>=1.1",
