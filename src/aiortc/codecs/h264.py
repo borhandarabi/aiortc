@@ -133,7 +133,7 @@ def create_encoder_context(
     codec.options = {
         "profile": "baseline",
         "level": "31",
-        "tune": "zerolatency",
+        "tune": "zerolatency" if codec_name != "h264_nvenc" else "null",
     }
     codec.open()
     return codec
@@ -285,12 +285,20 @@ class H264Encoder(Encoder):
             frame.pict_type = av.video.frame.PictureType.NONE
 
         if self.codec is None:
-            self.codec = create_encoder_context(
-                "libx264",
-                frame.width,
-                frame.height,
-                bitrate=self.target_bitrate,
-            )
+            try:
+                self.codec = create_encoder_context(
+                    "h264_nvenc",
+                    frame.width,
+                    frame.height,
+                    bitrate=self.target_bitrate,
+                )
+            except Exception:
+                self.codec = create_encoder_context(
+                    "libx264",
+                    frame.width,
+                    frame.height,
+                    bitrate=self.target_bitrate,
+                )
 
         data_to_send = b""
         for package in self.codec.encode(frame):
